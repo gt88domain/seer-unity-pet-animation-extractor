@@ -1,3 +1,43 @@
+# 赛尔传说 · 星辰冒险 (Seer Legends HTML5) + Mesh Animation Extractor
+
+类宝可梦 HTML5 游戏：三宠开局 → 6 张星球地图草丛探险 → 捕捉/进化/配招 → 挑战 6 大 SPT Boss → 裂隙隐藏 Boss。
+数值与技能数据源自 [Seer-golang-](https://github.com/gt88domain/Seer-golang-)（`spt.xml` / `skills.xml`，含伤害公式/克制表/经验曲线），
+立绘与属性图标来自 [seer-unity-assets-](https://github.com/gt88domain/seer-unity-assets-)，雷伊 / 神秘精灵 Boss 战使用本仓库的 Unity Mesh 网格动画实时渲染。
+
+## HTML5 游戏试玩
+
+```bash
+# 仓库根目录启动静态服务，然后打开：
+# http://127.0.0.1:8080/game/
+npx http-server .        # 或 python3 -m http.server 8080
+```
+
+玩法：WASD/方向键移动，E/空格互动；草丛遇怪 → 削弱 → 胶囊捕捉；治疗仪免费回复；
+商店补给；精灵升级学招、到等级自动进化；击败 Boss 解锁下一张地图。
+
+| 内容 | 规模 |
+| ---- | ---- |
+| 精灵 | 51 只（含完整进化链）+ 隐藏 Boss |
+| 技能 | 216 个（物攻/特攻/变化，全部附加效果可用） |
+| 地图 | 6 张（草原/浅滩/火山/遗迹/长空/雷神殿） |
+| Boss | 6 SPT + 1 隐藏（2 只 Mesh 动画） |
+| 道具 | 4 种胶囊 + 6 种药品 |
+
+## 数据管线
+
+```bash
+# 从 Seer-golang- 数据裁剪游戏 JSON（已内置开箱即用的 game/data/*.json）
+python tools/build_data.py --spt /path/to/Seer-golang-/data/spt.xml \
+                           --skills /path/to/Seer-golang-/data/skills.xml
+
+# 无头冒烟测试（Node stub DOM，跑完选宠/走路/野战/捕捉/Boss/商店/存档全流程）
+node tools/smoke.mjs
+```
+
+> 版权声明：精灵立绘/数值等游戏素材版权归上海淘米网络科技有限公司所有，仅供学习交流。
+
+---
+
 # Seer Unity Mesh Animation Extractor
 
 > [!WARNING]

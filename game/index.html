@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>赛尔传说 · 星辰冒险</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div id="app">
+  <div id="stage">
+    <canvas id="game" width="960" height="640"></canvas>
+
+    <div id="mainScreen" class="hidden">
+      <div id="worldHud">
+        <span id="hudMap">克洛斯星</span>
+        <span id="hudMoney">🪙 0</span>
+        <button class="hud-btn" id="hudParty">精灵</button>
+        <button class="hud-btn" id="hudBag">背包</button>
+        <button class="hud-btn" id="hudDex">图鉴</button>
+        <button class="hud-btn" id="hudSave">保存</button>
+        <button class="hud-btn" id="hudHelp">帮助</button>
+        <button class="hud-btn" id="hudMute">🔊</button>
+      </div>
+
+      <div id="battleLayer" class="hidden">
+        <div id="foePlate" class="plate foe">
+          <div class="p-name" id="foeName">???</div>
+          <div class="hp-bar"><div class="hp-fill" id="foeHpBar"></div></div>
+          <div class="p-hp" id="foeHpText"></div>
+          <div class="p-status" id="foeStatus"></div>
+        </div>
+        <div id="myPlate" class="plate me">
+          <div class="p-name" id="myName">???</div>
+          <div class="hp-bar"><div class="hp-fill" id="myHpBar"></div></div>
+          <div class="p-hp" id="myHpText"></div>
+          <div class="p-status" id="myStatus"></div>
+          <div class="exp-bar"><div id="myExpBar"></div></div>
+        </div>
+        <div id="msgBox"><div id="msgText"></div></div>
+        <div id="battleMenu" class="hidden">
+          <button id="btnFight">⚔️ 战斗</button>
+          <button id="btnBattleBag">🎒 背包</button>
+          <button id="btnPets">🐾 精灵</button>
+          <button id="btnRun">🏃 逃跑</button>
+        </div>
+        <div id="skillMenu" class="hidden"></div>
+      </div>
+    </div>
+
+    <div id="panelMask" class="hidden"></div>
+
+    <div id="dlgPanel" class="panel hidden">
+      <div class="panel-head"><span id="dlgTitle">对话</span></div>
+      <div class="panel-body" id="dlgBody"></div>
+      <div id="dlgBtns"></div>
+    </div>
+
+    <div id="partyPanel" class="panel hidden">
+      <div class="panel-head">精灵队伍<button class="x-btn" id="partyClose">✕</button></div>
+      <div class="panel-body" id="partyList"></div>
+    </div>
+
+    <div id="bagPanel" class="panel hidden">
+      <div class="panel-head">背包<span class="spacer" id="bagMoney"></span><button class="x-btn" id="bagClose">✕</button></div>
+      <div class="panel-body" id="bagList"></div>
+    </div>
+
+    <div id="shopPanel" class="panel hidden">
+      <div class="panel-head">补给站<span class="spacer" id="shopMoney"></span><button class="x-btn" id="shopClose">✕</button></div>
+      <div class="panel-body">
+        <p class="talk-text" id="shopGreet"></p>
+        <div id="shopList"></div>
+      </div>
+    </div>
+
+    <div id="dexPanel" class="panel hidden">
+      <div class="panel-head">精灵图鉴<span class="spacer" id="dexCount"></span><button class="x-btn" id="dexClose">✕</button></div>
+      <div class="panel-body"><div id="dexGrid"></div></div>
+    </div>
+
+    <div id="toast" class="hidden"></div>
+
+    <div id="titleScreen" class="hidden">
+      <div class="game-logo">
+        <div class="sub">赛 尔 传 说</div>
+        <h1>星辰冒险</h1>
+        <div class="en">SEER LEGENDS · HTML5</div>
+      </div>
+      <div class="title-btns">
+        <button class="btn primary" id="btnNew">新的冒险</button>
+        <button class="btn" id="btnContinue">继续游戏</button>
+      </div>
+      <div class="title-tip">WASD/方向键移动 · E/空格互动 · 数据源自赛尔号 Unity / Golang 开源工程，仅供学习交流</div>
+    </div>
+
+    <div id="starterScreen" class="hidden">
+      <h2>选择你的初始精灵</h2>
+      <div class="tip">三只小家伙都很期待与你相遇——点击卡片查看详情并确认</div>
+      <div id="starterList"></div>
+    </div>
+
+    <div id="loading">
+      <div class="game-logo"><h1 style="font-size:40px">星辰冒险</h1></div>
+      <div id="loadText">加载资源…</div>
+      <div id="loadBarWrap"><div id="loadBar"></div></div>
+    </div>
+
+    <div id="touchPad">
+      <div id="dpad">
+        <button id="btnUp">▲</button>
+        <button id="btnDown">▼</button>
+        <button id="btnLeft">◀</button>
+        <button id="btnRight">▶</button>
+      </div>
+      <button id="btnAct">A</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/engine.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/sprites.js"></script>
+<script src="js/vfx.js"></script>
+<script src="js/meshplayer.js"></script>
+<script src="js/world.js"></script>
+<script src="js/battle.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

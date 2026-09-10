@@ -1,0 +1,679 @@
+{
+ "title": "赛尔传说 · 星辰冒险",
+ "version": "0.1.0",
+ "levelCap": 50,
+ "teamSize": 6,
+ "maxMoves": 4,
+ "startMoney": 3000,
+ "startBag": {
+  "ball1": 5,
+  "potion1": 3
+ },
+ "starters": [
+  1,
+  4,
+  7
+ ],
+ "types": {
+  "1": {
+   "name": "草",
+   "color": "#43a047"
+  },
+  "2": {
+   "name": "水",
+   "color": "#1e88e5"
+  },
+  "3": {
+   "name": "火",
+   "color": "#e53935"
+  },
+  "4": {
+   "name": "飞行",
+   "color": "#7cb3d6"
+  },
+  "5": {
+   "name": "电",
+   "color": "#f9a825"
+  },
+  "6": {
+   "name": "机械",
+   "color": "#8d8d99"
+  },
+  "7": {
+   "name": "地面",
+   "color": "#b07a45"
+  },
+  "8": {
+   "name": "普通",
+   "color": "#a8a8a8"
+  },
+  "9": {
+   "name": "冰",
+   "color": "#4dd0e1"
+  },
+  "10": {
+   "name": "超能",
+   "color": "#ab47bc"
+  },
+  "11": {
+   "name": "战斗",
+   "color": "#d84a4a"
+  },
+  "12": {
+   "name": "光",
+   "color": "#c9a800"
+  },
+  "13": {
+   "name": "暗影",
+   "color": "#6a4fa3"
+  },
+  "14": {
+   "name": "神秘",
+   "color": "#26a69a"
+  },
+  "15": {
+   "name": "龙",
+   "color": "#ec407a"
+  },
+  "16": {
+   "name": "圣灵",
+   "color": "#8a8f6a"
+  }
+ },
+ "statusNames": {
+  "0": "麻痹",
+  "1": "中毒",
+  "2": "烧伤",
+  "5": "冻伤",
+  "6": "害怕",
+  "8": "睡眠",
+  "10": "混乱"
+ },
+ "items": {
+  "ball1": {
+   "name": "普通胶囊",
+   "kind": "ball",
+   "bonus": 1,
+   "price": 200,
+   "desc": "最普通的捕捉胶囊。"
+  },
+  "ball2": {
+   "name": "中级胶囊",
+   "kind": "ball",
+   "bonus": 1.5,
+   "price": 600,
+   "desc": "捕捉率 1.5 倍的胶囊。"
+  },
+  "ball3": {
+   "name": "高级胶囊",
+   "kind": "ball",
+   "bonus": 2,
+   "price": 1200,
+   "desc": "捕捉率 2 倍的胶囊。"
+  },
+  "master": {
+   "name": "大师胶囊",
+   "kind": "ball",
+   "bonus": 255,
+   "price": 0,
+   "desc": "必定捕捉成功的传说胶囊！"
+  },
+  "potion1": {
+   "name": "小伤药",
+   "kind": "heal",
+   "power": 60,
+   "price": 300,
+   "desc": "恢复 60 点体力。"
+  },
+  "potion2": {
+   "name": "中伤药",
+   "kind": "heal",
+   "power": 150,
+   "price": 700,
+   "desc": "恢复 150 点体力。"
+  },
+  "potion3": {
+   "name": "大伤药",
+   "kind": "heal",
+   "power": 300,
+   "price": 1500,
+   "desc": "恢复 300 点体力。"
+  },
+  "revive": {
+   "name": "复活药丸",
+   "kind": "revive",
+   "power": 0.5,
+   "price": 2000,
+   "desc": "复活濒死精灵并恢复一半体力。"
+  },
+  "antidote": {
+   "name": "万能解毒剂",
+   "kind": "cure",
+   "price": 400,
+   "desc": "解除一切异常状态。"
+  },
+  "ppup": {
+   "name": "PP补充剂",
+   "kind": "pp",
+   "power": 10,
+   "price": 800,
+   "desc": "恢复所有技能 10 点 PP。"
+  }
+ },
+ "maps": [
+  {
+   "id": "m1",
+   "name": "克洛斯星 · 草原",
+   "theme": "meadow",
+   "spawn": {
+    "x": 11,
+    "y": 11
+   },
+   "wild": [
+    {
+     "id": 10,
+     "lvMin": 2,
+     "lvMax": 4,
+     "w": 40
+    },
+    {
+     "id": 16,
+     "lvMin": 3,
+     "lvMax": 5,
+     "w": 25
+    },
+    {
+     "id": 22,
+     "lvMin": 3,
+     "lvMax": 5,
+     "w": 25
+    },
+    {
+     "id": 27,
+     "lvMin": 4,
+     "lvMax": 6,
+     "w": 10
+    }
+   ],
+   "boss": {
+    "pet": 47,
+    "lv": 8,
+    "name": "蘑菇怪",
+    "intro": "吼——！我是守卫草原的蘑菇怪！想要通过，就先打败我！",
+    "reward": {
+     "pet": 46,
+     "petLv": 5,
+     "money": 1000
+    },
+    "winText": "你赢了……这只小蘑菇就托付给你了，好好照顾它！"
+   },
+   "npcs": [
+    {
+     "shop": [
+      "ball1",
+      "potion1",
+      "antidote"
+     ],
+     "greet": "欢迎来到补给站！胶囊和伤药要备足哦。"
+    },
+    {
+     "text": "草丛里会窜出野生精灵！先把它打到残血，再用胶囊捕捉，成功率会高很多。"
+    }
+   ],
+   "signs": [
+    "前方是蘑菇怪的领地，硬闯很危险，先去草丛里练练级吧！"
+   ],
+   "rows": [
+    "TTTTTTTTTTTTTTTTTTTTTTTT",
+    "TTT,,,,,,,,,,,,,,,,,,TTT",
+    "TTTT,,,,,,,BB,,,,,,,TTTT",
+    "TTT,,,,,,,,,,,,,,,,,,TTT",
+    "TTTPPPPPPPPPPPPPPPPPPTTT",
+    "TTT,,,TTTTTTTTTTTT,,,TTT",
+    "TTT,,,TT........TT,,,TTT",
+    "TTT,,,,TT..HH..TT,,,,TTT",
+    "TTT,,,,TT......TT,,,,TTT",
+    "TTT,,,,TT..NN..TT,,,,TTT",
+    "TTT,,,,TTTTTTTTTT,,,,TTT",
+    "TTTPPPPPPPPPPPPPPPPPPTTT",
+    "TTT,,,,,,,,,,,,,,,,,,TTT",
+    "TTTX,,,,,,,,,,,,,,,,,TTT",
+    "TTT,,,,,,,,,,,,,,,,EETTT",
+    "TTTTTTTTTTTTTTTTTTTTTTTT"
+   ]
+  },
+  {
+   "id": "m2",
+   "name": "海洋星 · 浅滩",
+   "theme": "beach",
+   "spawn": {
+    "x": 11,
+    "y": 13
+   },
+   "wild": [
+    {
+     "id": 30,
+     "lvMin": 7,
+     "lvMax": 9,
+     "w": 35
+    },
+    {
+     "id": 33,
+     "lvMin": 8,
+     "lvMax": 10,
+     "w": 30
+    },
+    {
+     "id": 13,
+     "lvMin": 8,
+     "lvMax": 10,
+     "w": 25
+    },
+    {
+     "id": 10,
+     "lvMin": 6,
+     "lvMax": 8,
+     "w": 10
+    }
+   ],
+   "boss": {
+    "pet": 34,
+    "lv": 14,
+    "name": "钢牙鲨",
+    "intro": "哗啦——！这片海域是我的猎场！小鬼，敢跟我较量吗？",
+    "reward": {
+     "items": {
+      "ball2": 5
+     },
+     "money": 1500
+    },
+    "winText": "嗷……好强的训练师！这些中级胶囊送你，继续前进吧！"
+   },
+   "npcs": [
+    {
+     "shop": [
+      "ball1",
+      "ball2",
+      "potion1",
+      "potion2",
+      "antidote"
+     ],
+     "greet": "海边补给站！电系精灵克制水系，抓一只比比鼠会有奇效。"
+    },
+    {
+     "text": "钢牙鲨是利牙鱼的进化型，物攻非常凶猛。记得带够伤药！"
+    }
+   ],
+   "signs": [
+    "警告：深水区有凶猛的钢牙鲨出没！"
+   ],
+   "rows": [
+    "TTTTTTTTTTTTTTTTTTTTTTTT",
+    "TTSSSSSSSSSSSSSSSSSSSSTT",
+    "TTSSWWWWSSSSSBBSSSSSWWTT",
+    "TTSSWWWWSSSSSSSSSSSSSWTT",
+    "TTSSSWWSSSSSSSSSSSSSSSTT",
+    "TTSSSSSSSSSSSSSSSSSSSSTT",
+    "TTPPPPPPPPPPPPPPPPPPPPTT",
+    "TT,,,SS........SS...SSTT",
+    "TT,,,SS..HH..SSFF...SSTT",
+    "TT,,,SS......SSFF...SSTT",
+    "TT,,,SS..NN..SSFF...SSTT",
+    "TT,,,SS......SS.....SSTT",
+    "TTPPPPPPPPPPPPPPPPPPPPTT",
+    "TT,,,SS,,,SSSS,,,SS,,STT",
+    "TT,X,SS,,,SSSS,,,SS,EETT",
+    "TTTTTTTTTTTTTTTTTTTTTTTT"
+   ]
+  },
+  {
+   "id": "m3",
+   "name": "火山星 · 山脚",
+   "theme": "volcano",
+   "spawn": {
+    "x": 11,
+    "y": 11
+   },
+   "wild": [
+    {
+     "id": 35,
+     "lvMin": 12,
+     "lvMax": 14,
+     "w": 35
+    },
+    {
+     "id": 38,
+     "lvMin": 12,
+     "lvMax": 14,
+     "w": 30
+    },
+    {
+     "id": 33,
+     "lvMin": 13,
+     "lvMax": 15,
+     "w": 20
+    },
+    {
+     "id": 41,
+     "lvMin": 13,
+     "lvMax": 15,
+     "w": 15
+    }
+   ],
+   "boss": {
+    "pet": 42,
+    "lv": 20,
+    "name": "里奥斯",
+    "intro": "火焰即吾之意志！挑战者，让我看看你的觉悟！",
+    "reward": {
+     "pet": 41,
+     "petLv": 10,
+     "money": 2000
+    },
+    "winText": "漂亮的战斗……胡里亚很欣赏你，让它加入你的队伍吧！"
+   },
+   "npcs": [
+    {
+     "shop": [
+      "ball1",
+      "ball2",
+      "potion2",
+      "potion3",
+      "revive",
+      "antidote"
+     ],
+     "greet": "火山补给站，物资齐全！水系和地面系是这里的王道。"
+    },
+    {
+     "text": "里奥斯守护着火山深处的通道。它的火焰会烧伤精灵，记得带解毒剂！"
+    }
+   ],
+   "signs": [
+    "岩浆危险！请沿着石板路行走。"
+   ],
+   "rows": [
+    "RRRRRRRRRRRRRRRRRRRRRRRR",
+    "RR,,,,,,,,,,,,,,,,,,RRRR",
+    "RRR,,,,,,BB,,,,,,,,,RRRR",
+    "RR,,,,,,,,,,,,,,,,,,RRRR",
+    "RRPPPPPPPPPPPPPPPPPPPRRR",
+    "RR,,,RRRRWWRRRRRR,,,RRRR",
+    "RR,,,RR......RR,,,RRRRRR",
+    "RR,,,,R...HH...R,,,,RRRR",
+    "RR,,,,R........R,,,,RRRR",
+    "RR,,,,R...NN...R,,,,RRRR",
+    "RR,,,,RRR....RRR,,,,RRRR",
+    "RRPPPPPPPPPPPPPPPPPPPRRR",
+    "RR,,,,,,,,,,,,,,,,,,RRRR",
+    "RRX,,,,,,,,,,,,,,,,,RRRR",
+    "RR,,,,,,,,,,,,,,,,,EERRR",
+    "RRRRRRRRRRRRRRRRRRRRRRRR"
+   ]
+  },
+  {
+   "id": "m4",
+   "name": "赫尔卡星 · 遗迹",
+   "theme": "ruins",
+   "spawn": {
+    "x": 11,
+    "y": 11
+   },
+   "wild": [
+    {
+     "id": 43,
+     "lvMin": 16,
+     "lvMax": 18,
+     "w": 30
+    },
+    {
+     "id": 48,
+     "lvMin": 16,
+     "lvMax": 18,
+     "w": 30
+    },
+    {
+     "id": 53,
+     "lvMin": 16,
+     "lvMax": 18,
+     "w": 25
+    },
+    {
+     "id": 35,
+     "lvMin": 17,
+     "lvMax": 19,
+     "w": 15
+    }
+   ],
+   "boss": {
+    "pet": 50,
+    "lv": 26,
+    "name": "阿克希亚",
+    "intro": "冰封千年的遗迹，不容凡人踏足……除非你能战胜我！",
+    "reward": {
+     "pet": 48,
+     "petLv": 10,
+     "money": 2500
+    },
+    "winText": "千年寒冰也被你的热情融化了……索拉愿意跟随你！"
+   },
+   "npcs": [
+    {
+     "shop": [
+      "ball2",
+      "ball3",
+      "potion2",
+      "potion3",
+      "revive",
+      "antidote",
+      "ppup"
+     ],
+     "greet": "遗迹补给站！高级胶囊到货，稀有精灵就靠它了。"
+    },
+    {
+     "text": "阿克希亚是冰系王者，火系和战斗系技能对它效果拔群！"
+    }
+   ],
+   "signs": [
+    "古代石碑：唯有通过试炼者，方可登上云霄。"
+   ],
+   "rows": [
+    "DDDDDDDDDDDDDDDDDDDDDDDD",
+    "DD,,,,,,,,,,,,,,,,,,DDDD",
+    "DDD,,,,,,BB,,,,,,,,,DDDD",
+    "DD,,,,,,,,,,,,,,,,,,DDDD",
+    "DDPPPPPPPPPPPPPPPPPPDDDD",
+    "DD,,,DDD......DDD,,,DDDD",
+    "DD,,,DD...HH...DD,,,DDDD",
+    "DD,,,,D........D,,,,DDDD",
+    "DD,,,,D...NN...D,,,,DDDD",
+    "DD,,,,D........D,,,,DDDD",
+    "DD,,,DDD......DDD,,,DDDD",
+    "DDPPPPPPPPPPPPPPPPPPDDDD",
+    "DD,,,,,,,,,,,,,,,,,,DDDD",
+    "DDX,,,,,,,,,,,,,,,,,DDDD",
+    "DD,,,,,,,,,,,,,,,,,EEDDD",
+    "DDDDDDDDDDDDDDDDDDDDDDDD"
+   ]
+  },
+  {
+   "id": "m5",
+   "name": "云霄星 · 长空",
+   "theme": "sky",
+   "spawn": {
+    "x": 11,
+    "y": 11
+   },
+   "wild": [
+    {
+     "id": 11,
+     "lvMin": 19,
+     "lvMax": 21,
+     "w": 25
+    },
+    {
+     "id": 17,
+     "lvMin": 19,
+     "lvMax": 21,
+     "w": 25
+    },
+    {
+     "id": 36,
+     "lvMin": 20,
+     "lvMax": 22,
+     "w": 25
+    },
+    {
+     "id": 44,
+     "lvMin": 20,
+     "lvMax": 22,
+     "w": 25
+    }
+   ],
+   "boss": {
+    "pet": 69,
+    "lv": 30,
+    "name": "提亚斯",
+    "intro": "风之守护者提亚斯在此！天空的试炼，现在开始！",
+    "reward": {
+     "pet": 68,
+     "petLv": 15,
+     "money": 3000
+    },
+    "winText": "你征服了天空……米拉美决定与你一同翱翔！"
+   },
+   "npcs": [
+    {
+     "shop": [
+      "ball2",
+      "ball3",
+      "potion3",
+      "revive",
+      "antidote",
+      "ppup"
+     ],
+     "greet": "云端补给站！雷神殿就在前方，做好万全准备吧。"
+    },
+    {
+     "text": "提亚斯速度极快！用电系或冰系先发制人是关键。"
+    }
+   ],
+   "signs": [
+    "云海之上，雷光隐现——最终的试炼近在咫尺。"
+   ],
+   "rows": [
+    "WWWWWWWWWWWWWWWWWWWWWWWW",
+    "WW,,,,,,,,,,,,,,,,,,WWWW",
+    "WWW,,,,,,BB,,,,,,,,,WWWW",
+    "WW,,,,,,,,,,,,,,,,,,WWWW",
+    "WWPPPPPPPPPPPPPPPPPPWWWW",
+    "WW,,,FFF......FFF,,,WWWW",
+    "WW,,,FFF..HH..FFF,,,WWWW",
+    "WW,,,,,,......,,,,,,WWWW",
+    "WW,,,,,,..NN..,,,,,,WWWW",
+    "WW,,,,FFF......FFF,,,,WW",
+    "WW,,,FFF......FFF,,,WWWW",
+    "WWPPPPPPPPPPPPPPPPPPWWWW",
+    "WW,,,,,,,,,,,,,,,,,,WWWW",
+    "WWX,,,,,,,,,,,,,,,,,WWWW",
+    "WW,,,,,,,,,,,,,,,,,EEWWW",
+    "WWWWWWWWWWWWWWWWWWWWWWWW"
+   ]
+  },
+  {
+   "id": "m6",
+   "name": "雷神殿 · 王座",
+   "theme": "temple",
+   "spawn": {
+    "x": 11,
+    "y": 11
+   },
+   "wild": [
+    {
+     "id": 15,
+     "lvMin": 24,
+     "lvMax": 27,
+     "w": 25
+    },
+    {
+     "id": 45,
+     "lvMin": 24,
+     "lvMax": 27,
+     "w": 25
+    },
+    {
+     "id": 32,
+     "lvMin": 25,
+     "lvMax": 28,
+     "w": 25
+    },
+    {
+     "id": 40,
+     "lvMin": 25,
+     "lvMax": 28,
+     "w": 25
+    }
+   ],
+   "boss": {
+    "pet": 70,
+    "lv": 36,
+    "name": "雷伊",
+    "mesh": true,
+    "intro": "吾乃雷神雷伊！千万伏特的愤怒，你承受得住吗？！",
+    "reward": {
+     "items": {
+      "master": 1
+     },
+     "money": 5000
+    },
+    "winText": "雷神殿的光芒属于你了……拿着大师胶囊，去收服裂隙中的神秘存在吧！"
+   },
+   "npcs": [
+    {
+     "shop": [
+      "ball3",
+      "potion3",
+      "revive",
+      "antidote",
+      "ppup"
+     ],
+     "greet": "最后的补给站！愿星辰之光保佑你，挑战者。"
+    },
+    {
+     "text": "击败雷伊之后，神殿深处会出现神秘裂隙……传说那里藏着不属于这个世界的精灵。"
+    }
+   ],
+   "signs": [
+    "雷神王座：挑战雷伊，即是挑战雷霆本身。"
+   ],
+   "secret": {
+    "pet": 4913,
+    "lv": 50,
+    "name": "？？？",
+    "mesh": true,
+    "intro": "空间撕裂了……未知精灵从裂隙中现身！",
+    "winText": "你创造了传说！神秘精灵成为了伙伴！",
+    "reward": {
+     "money": 9999
+    }
+   },
+   "rows": [
+    "DDDDDDDDDDDDDDDDDDDDDDDD",
+    "DD,,,,,,,,,,,,,,,,,,DDDD",
+    "DDD,,,,,,BB,,,,,,,,,DDDD",
+    "DD,,,,,,,,,,,,,,,,,,DDDD",
+    "DDPPPPPPPPPPPPPPPPPPDDDD",
+    "DD,,,DDD......DDD,,,DDDD",
+    "DD,,,DD...HH...DD,,,DDDD",
+    "DD,,,,D........D,,,,DDDD",
+    "DD,,,,D...NN...D,,,,DDDD",
+    "DD,,,,D........D,,,,DDDD",
+    "DD,,,DDD......DDD,,,DDDD",
+    "DDPPPPPPPPPPPPPPPPPPDDDD",
+    "DD,,,,,,,,,,,,,,,,,,DDDD",
+    "DDX,,,,,,,,,,,,,,,,,DDDD",
+    "DD,,,,,,,,,,,,,,,,,,DDDD",
+    "DDDDDDDDDDDDDDDDDDDDDDDD"
+   ]
+  }
+ ]
+}
