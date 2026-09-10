@@ -9,7 +9,7 @@
   const G = {
     team: [], box: [], bag: {}, money: 0, mapIdx: 0,
     bosses: [false, false, false, false, false, false],
-    secretBeaten: false, dex: {}, playerName: "赛尔",
+    secretDone: [], dex: {}, playerName: "赛尔", // secretDone: 已击败的裂隙 Boss petId(4913 + secretPlus 轮换)
   };
   window.Game = G;
 
@@ -19,7 +19,7 @@
     try {
       localStorage.setItem(SAVE_KEY, JSON.stringify({
         team: G.team, box: G.box, bag: G.bag, money: G.money, mapIdx: G.mapIdx,
-        bosses: G.bosses, secretBeaten: G.secretBeaten, dex: G.dex,
+        bosses: G.bosses, secretDone: G.secretDone, dex: G.dex,
         pos: { x: World.tx, y: World.ty },
       }));
     } catch (e) { /* ignore */ }
@@ -31,7 +31,8 @@
   G.loadSave = function () {
     const s = JSON.parse(localStorage.getItem(SAVE_KEY));
     G.team = s.team; G.box = s.box || []; G.bag = s.bag; G.money = s.money;
-    G.mapIdx = s.mapIdx || 0; G.bosses = s.bosses; G.secretBeaten = !!s.secretBeaten;
+    G.mapIdx = s.mapIdx || 0; G.bosses = s.bosses;
+    G.secretDone = s.secretDone || (s.secretBeaten ? [4913] : []); // 兼容旧存档
     G.dex = s.dex || {};
     return s.pos;
   };
@@ -54,7 +55,7 @@
       onExitLocked: () => { AudioSys.play("back"); UI.toast("出口被守卫的力量封锁了，先击败本区域的 Boss！"); },
     };
     const beaten = G.bosses[G.mapIdx];
-    const secretOpen = G.mapIdx === 5 && G.bosses[5] && !G.secretBeaten;
+    const secretOpen = G.mapIdx === 5 && G.bosses[5] && !!G.nextSecret();
     World.load(maps, G.mapIdx, spawn, beaten, secretOpen);
     $("hudMap").textContent = maps[G.mapIdx].name;
     $("hudMoney").textContent = "🪙 " + G.money;
@@ -108,9 +109,18 @@
       });
     });
   };
+  G.secretQueue = function () {
+    const m6 = window.CFG.maps[5];
+    return [m6.secret].concat(m6.secretPlus || []);
+  };
+  G.nextSecret = function () {
+    const done = G.secretDone || [];
+    return G.secretQueue().find((s) => done.indexOf(s.pet) < 0) || null;
+  };
   G.startSecret = function () {
     if (Battle.active || UI.anyOpen()) return;
-    const s = window.CFG.maps[5].secret;
+    const s = G.nextSecret();
+    if (!s) return;
     UI.confirm("进入神秘裂隙？", s.intro + "（Lv" + s.lv + "，可捕捉！）", () => {
       Battle.start({
         foeId: s.pet, foeLv: s.lv, kind: "secret", theme: "temple",
@@ -159,12 +169,19 @@
         else msg += "<br/>通往下一区域的出口已经解封！";
         UI.dialog("胜利！", "<p class='talk-text'>" + msg + "</p>");
       } else if (bossCtx.type === "secret") {
-        G.secretBeaten = true;
-        G.money += (bossCtx.cfg.reward || {}).money || 0;
+        const rw = bossCtx.cfg.reward || {};
+        if (rw.money) G.money += rw.money;
+        if (rw.items) for (const k in rw.items) G.bag[k] = (G.bag[k] || 0) + rw.items[k];
+        G.secretDone = G.secretDone || [];
+        if (G.secretDone.indexOf(bossCtx.cfg.pet) < 0) G.secretDone.push(bossCtx.cfg.pet);
         G.save();
         $("hudMoney").textContent = "🪙 " + G.money;
-        G.enterWorld({ x: World.tx, y: World.ty });
-        UI.dialog("传说！", "<p class='talk-text'>" + bossCtx.cfg.winText + "<br/>你已完成全部挑战，感谢游玩！</p>");
+        G.enterWorld({ x: World.tx, y: World.ty }); // 刷新裂隙状态(保留位置)
+        let smsg = bossCtx.cfg.winText;
+        if (rw.money) smsg += "<br/>获得 " + rw.money + " 赛尔豆！";
+        if (rw.items) smsg += "<br/>获得道具：" + Object.keys(rw.items).map((k) => window.CFG.items[k].name + "×" + rw.items[k]).join("、");
+        if (!G.nextSecret()) smsg += "<br/>你已完成全部挑战，感谢游玩！";
+        UI.dialog("传说！", "<p class='talk-text'>" + smsg + "</p>");
       }
     }
   };
@@ -219,22 +236,38 @@
     window.PETS = pets; window.SKILLS = skills; window.CFG = cfg;
     document.title = cfg.title + " · Seer Legends HTML5";
 
-    // 预加载立绘
+    // 皮肤 manifest + 上次选择
+    try {
+      const mf = await fetch("assets/skins/ghibli/manifest.json").then((r) => r.json());
+      (mf.ids || []).forEach((id) => { Sprites.skinIds[id] = true; });
+    } catch (e) { /* 无皮肤包 */ }
+    try { Sprites.skin = localStorage.getItem("seer_skin") === "ghibli" ? "ghibli" : null; }
+    catch (e) { Sprites.skin = null; }
+    // 预加载立绘 (先经典后皮肤, 避免缓存键串味)
     const ids = Object.keys(pets).filter((k) => k !== "4913");
     const list = [];
     ids.forEach((id) => { list.push(["body", id]); list.push(["head", id]); });
     for (let t = 0; t <= 16; t++) list.push(["type", t]);
     const bar = $("loadBar"), txt = $("loadText");
+    const wantSkin = Sprites.skin;
+    Sprites.skin = null;
     await Sprites.preload(list, (d, t2) => {
       bar.style.width = ((d / t2) * 100).toFixed(0) + "%";
       txt.textContent = "加载资源 " + d + "/" + t2;
     });
+    Sprites.skin = wantSkin;
+    if (wantSkin) {
+      const sl = [];
+      Object.keys(Sprites.skinIds).forEach((id) => { sl.push(["body", id]); sl.push(["head", id]); });
+      await Sprites.preload(sl, null);
+    }
     $("loading").classList.add("hidden");
 
     // 标题
     UI.showTitle(G.hasSave());
     AudioSys.bgm("title");
     bindUI();
+    G.refreshSkinBtns();
 
     // 主循环
     let last = performance.now();
@@ -374,6 +407,8 @@
     $("hudDex").onclick = () => { AudioSys.play("select"); if (!Battle.active) UI.openDex(); };
     $("hudSave").onclick = () => { G.save(); UI.toast("已保存！"); AudioSys.play("coin"); };
     $("hudMute").onclick = () => toggleMute();
+    if ($("hudSkin")) $("hudSkin").onclick = () => { AudioSys.play("select"); G.toggleSkin(); };
+    if ($("btnSkin")) $("btnSkin").onclick = () => { AudioSys.play("select"); G.toggleSkin(); };
     $("hudHelp").onclick = () => {
       AudioSys.play("click");
       UI.dialog("玩法指南",
@@ -408,6 +443,25 @@
     const m = AudioSys.toggleMute();
     $("hudMute").textContent = m ? "🔇" : "🔊";
   }
+  // 画风切换: 经典 <-> 宫崎骏Q版 (仅 manifest 内已绘制的精灵生效, 其余自动回退经典)
+  G.toggleSkin = async function () {
+    if (!Object.keys(Sprites.skinIds).length) { UI.toast("宫崎骏Q版皮肤包还在绘制中…"); return; }
+    Sprites.skin = Sprites.skin ? null : "ghibli";
+    try { localStorage.setItem("seer_skin", Sprites.skin || ""); } catch (e) { /* ignore */ }
+    if (Sprites.skin) {
+      const sl = [];
+      Object.keys(Sprites.skinIds).forEach((id) => { sl.push(["body", id]); sl.push(["head", id]); });
+      UI.toast("正在加载宫崎骏Q版…");
+      await Sprites.preload(sl, null);
+    }
+    G.refreshSkinBtns();
+    UI.toast(Sprites.skin ? "已切换：宫崎骏Q版画风 ✨(首批三主宠)" : "已切换：经典画风");
+  };
+  G.refreshSkinBtns = function () {
+    const t = Sprites.skin ? "🎨Q版" : "🎨经典";
+    if ($("hudSkin")) $("hudSkin").textContent = t;
+    if ($("btnSkin")) $("btnSkin").textContent = Sprites.skin ? "🎨 画风：宫崎骏Q版" : "🎨 画风：经典";
+  };
   function startNewGame() {
     UI.hideTitle();
     UI.showStarter((starterId) => {
@@ -417,7 +471,7 @@
       G.money = window.CFG.startMoney;
       G.mapIdx = 0;
       G.bosses = [false, false, false, false, false, false];
-      G.secretBeaten = false;
+      G.secretDone = [];
       G.dex = {};
       G.registerDex(starterId, true);
       G.save();

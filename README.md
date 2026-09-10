@@ -2,7 +2,8 @@
 
 类宝可梦 HTML5 游戏：三宠开局 → 6 张星球地图草丛探险 → 捕捉/进化/配招 → 挑战 6 大 SPT Boss → 裂隙隐藏 Boss。
 数值与技能数据源自 [Seer-golang-](https://github.com/gt88domain/Seer-golang-)（`spt.xml` / `skills.xml`，含伤害公式/克制表/经验曲线），
-立绘与属性图标来自 [seer-unity-assets-](https://github.com/gt88domain/seer-unity-assets-)，雷伊 / 神秘精灵 Boss 战使用本仓库的 Unity Mesh 网格动画实时渲染。
+立绘与属性图标来自 [seer-unity-assets-](https://github.com/gt88domain/seer-unity-assets-)，4 只隐藏 Boss 使用本仓库的 Unity Mesh 网格动画实时渲染（雷伊 / 神秘精灵 / 鲁尔蒂尼 / 朵拉格）。
+另有自制「宫崎骏 Q 版」皮肤可一键切换（首批三主宠，标题屏/ HUD 🎨 按钮）。
 
 ## HTML5 游戏试玩
 
@@ -17,11 +18,12 @@ npx http-server .        # 或 python3 -m http.server 8080
 
 | 内容 | 规模 |
 | ---- | ---- |
-| 精灵 | 51 只（含完整进化链）+ 隐藏 Boss |
-| 技能 | 216 个（物攻/特攻/变化，全部附加效果可用） |
+| 精灵 | 73 只（含完整进化链）+ 隐藏 Boss |
+| 技能 | 319 个（物攻/特攻/变化，全部附加效果可用） |
 | 地图 | 6 张（草原/浅滩/火山/遗迹/长空/雷神殿） |
-| Boss | 6 SPT + 1 隐藏（2 只 Mesh 动画） |
+| Boss | 6 SPT + 5 连战裂隙（SPT 通缉令，4 只 Mesh 动画） |
 | 道具 | 4 种胶囊 + 6 种药品 |
+| 皮肤 | 宫崎骏 Q 版（首批三主宠一整线，逐步追加） |
 
 ## 数据管线
 
@@ -32,6 +34,15 @@ python tools/build_data.py --spt /path/to/Seer-golang-/data/spt.xml \
 
 # 无头冒烟测试（Node stub DOM，跑完选宠/走路/野战/捕捉/Boss/商店/存档全流程）
 node tools/smoke.mjs
+
+# 数据 + 新 SideEffect 引擎校验
+node tools/validate_data.mjs
+
+# ppets_* AssetBundle -> 游戏 Mesh 数据（需自备 Bundle，见 tools/mesh/）
+python tools/mesh/export_mesh.py ppets_431 out/ [--atlas-size 2048]
+
+# 宫崎骏皮肤批处理（品红底 AI 图 -> 透明立绘 + manifest）
+python tools/skins/chromakey.py raw/ [--ids 1,2,3]
 ```
 
 > 版权声明：精灵立绘/数值等游戏素材版权归上海淘米网络科技有限公司所有，仅供学习交流。

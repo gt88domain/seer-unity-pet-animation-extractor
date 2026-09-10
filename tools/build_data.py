@@ -33,7 +33,31 @@ ROSTER = [
     53, 54, 55,                          # 莫比线
     68, 69,                              # 米拉美线
     70,                                  # 雷伊
+    83, 84, 85,                          # 依依线(草)
+    59, 60, 61,                          # 铁皮线(机械, 需补进化链)
+    25, 26,                              # 幽浮线(飞行)
+    86, 87, 88,                          # 纳格线(地面)
+    111, 112, 113,                       # 雷格线(机械, 需补进化链)
+    131, 132,                            # 影球线(暗影)
+    186, 187,                            # 露露线(普通)
+    215, 216,                            # 哈莫线(龙)
+    431, 502,                              # Mesh 隐藏 Boss(鲁尔蒂尼/朵拉格, 纯手工卡组)
 ]
+
+# Mesh Boss 合成覆盖: spt 里是 Unity 新技能 ID (skills.xml 没有), 用经典招式手工组卡
+SYNTH = {
+    431: {"type": 2, "type2": 0, "catch": 3, "yieldExp": 180, "growth": 1,
+          "moves": [[10027, 1], [10021, 1], [10209, 1], [10024, 1]]},   # 高压水枪/泡沫光线/极冰风暴/水流喷射
+    502: {"type": 15, "type2": 13, "catch": 3, "yieldExp": 220, "growth": 1,
+          "moves": [[10618, 1], [10622, 1], [10406, 1], [10410, 1]]},  # 龙王灭碎阵/龙王波/瞬影烈刃/黑暗之门
+}
+
+# spt.xml 里 EvolvesTo=0 但有 EvolvingLv 的断链, 手工补上 (fromId -> (toId, lv))
+EVO_PATCH = {59: (60, 18), 60: (61, 38), 111: (112, 19), 112: (113, 39)}
+
+# 捕捉率修正: spt 里为 0 的野生宠按稀有度放行 (187/216 纯进化, 保持 0)
+# 44/15/45 是野生二段进化 (原版不可抓), 宝可梦式放行, 稍难
+CATCH_OVR = {186: 25, 215: 5, 44: 30, 15: 30, 45: 30}
 
 TYPE_NAMES = {1: "草", 2: "水", 3: "火", 4: "飞行", 5: "电", 6: "机械", 7: "地面",
               8: "普通", 9: "冰", 10: "超能", 11: "战斗", 12: "光", 13: "暗影",
@@ -61,19 +85,30 @@ def parse_pets(spt_path):
             if mid > 0:
                 moves.append([mid, lv])
         moves.sort(key=lambda x: x[1])
+        evo_to, evo_lv = to_int(m.get("EvolvesTo")), to_int(m.get("EvolvingLv"))
+        if pid in EVO_PATCH and not evo_to:
+            evo_to, evo_lv = EVO_PATCH[pid]
+        ptype, ptype2 = to_int(m.get("Type"), 8), to_int(m.get("Type2"), 0)
+        pcatch, pyield, pgrowth = CATCH_OVR.get(pid, to_int(m.get("CatchRate"), 45)), \
+            to_int(m.get("YieldingExp"), 60), to_int(m.get("GrowthType"), 1)
+        if pid in SYNTH:
+            s = SYNTH[pid]
+            ptype, ptype2 = s["type"], s["type2"]
+            pcatch, pyield, pgrowth = s["catch"], s["yieldExp"], s["growth"]
+            moves = [list(x) for x in s["moves"]]
         pets[pid] = {
             "id": pid,
             "name": m.get("DefName") or f"精灵#{pid}",
-            "type": to_int(m.get("Type"), 8),
-            "type2": to_int(m.get("Type2"), 0),
+            "type": ptype,
+            "type2": ptype2,
             "base": [to_int(m.get("HP")), to_int(m.get("Atk")), to_int(m.get("Def")),
                      to_int(m.get("SpAtk")), to_int(m.get("SpDef")), to_int(m.get("Spd"))],
             "evoFrom": to_int(m.get("EvolvesFrom")),
-            "evoTo": to_int(m.get("EvolvesTo")),
-            "evoLv": to_int(m.get("EvolvingLv")),
-            "catch": to_int(m.get("CatchRate"), 45),
-            "yieldExp": to_int(m.get("YieldingExp"), 60),
-            "growth": to_int(m.get("GrowthType"), 1),
+            "evoTo": evo_to,
+            "evoLv": evo_lv,
+            "catch": pcatch,
+            "yieldExp": pyield,
+            "growth": pgrowth,
             "moves": moves,
         }
     return pets

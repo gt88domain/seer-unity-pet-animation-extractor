@@ -69,7 +69,10 @@
   };
 
   B._setupMesh = async function (petId, side, mirror) {
-    const MESH = { 70: ["../70.pet.json", "../70._Atlas_.png"], 4913: ["../4913.pet.json", "../4913._Atlas_.png"] };
+    const MESH = {
+      70: ["../70.pet.json", "../70._Atlas_.png"], 4913: ["../4913.pet.json", "../4913._Atlas_.png"],
+      431: ["../431.pet.json", "../431._Atlas_.png"], 502: ["../502.pet.json", "../502._Atlas_.png"],
+    };
     const key = side === "p" ? "myMesh" : "foeMesh";
     const okKey = side === "p" ? "myMeshOk" : "foeMeshOk";
     B[key] = null; B[okKey] = false;

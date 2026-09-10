@@ -407,6 +407,13 @@
       att.pet.hp = Math.min(att.pet.stats.maxhp, att.pet.hp + back);
       events.push({ t: "heal", side: side, amount: back, drain: true });
     }
+    // 绿光波 SE54: 按 args[0]/args[1] 比例吸取
+    if (sk.se.indexOf(54) >= 0 && totalDmg > 0 && att.pet.hp > 0) {
+      const num = sk.args[0] || 1, den = sk.args[1] || 2;
+      const back = Math.max(1, Math.floor((totalDmg * num) / den));
+      att.pet.hp = Math.min(att.pet.stats.maxhp, att.pet.hp + back);
+      events.push({ t: "heal", side: side, amount: back, drain: true });
+    }
     // 反冲
     if (sk.se.indexOf(6) >= 0 && totalDmg > 0) {
       const denom = sk.args[sk.se.indexOf(6)] || 4;
@@ -476,6 +483,7 @@
         case 15: if (roll(a)) E.setStatus(def, E.ST.FEAR, 1, events, foeSide); break;
         case 29: if (roll(a)) E.setStatus(def, E.ST.FEAR, 1, events, foeSide); break;
         case 20: if (roll(args[0] == null ? 100 : args[0])) E.setStatus(def, E.ST.FEAR, args[1] || 1, events, foeSide); break;
+        case 22: if (roll(sk.args[0] == null ? 100 : sk.args[0])) E.setStatus(def, E.ST.FEAR, sk.args[1] || 1, events, foeSide); break; // 气绝冲/龙王灭碎阵: 害怕
         default: break;
       }
     });
@@ -522,6 +530,20 @@
           events.push({ t: "heal", side: side, amount: back });
           break;
         }
+        case 52: E.applyStage(def, 5, -(sk.args[0] || 1), events, foeSide); break; // 回避: 对方命中下降
+        case 55: // 属性反转: 对方能力等级取反
+          for (let _i = 0; _i < 6; _i++) def.stages[_i] = Math.max(-6, Math.min(6, -def.stages[_i]));
+          events.push({ t: "msg", text: "对方的能力变化反转了！", side: foeSide });
+          break;
+        case 56: // 属性复制: 复制对方能力等级
+          for (let _i2 = 0; _i2 < 6; _i2++) att.stages[_i2] = def.stages[_i2];
+          events.push({ t: "msg", text: "复制了对方的能力变化！", side: side });
+          break;
+        case 59: E.setStatus(def, E.ST.CONFUSION, sk.args[1] || 3, events, foeSide); break; // 灵魂附体: 混乱
+        case 63: // 镜影术: 镜影迷惑, 对方命中大降
+          E.applyStage(def, 5, -2, events, foeSide);
+          events.push({ t: "msg", text: "镜影迷惑了对方！", side: side });
+          break;
         default: break;
       }
     });
@@ -529,7 +551,8 @@
 
   // 先后手 (移植自 battle.go CompareSpeed)
   E.playerFirst = function (b, psk, esk) {
-    const p1 = (psk && psk.pri) || 0, p2 = (esk && esk.pri) || 0;
+    const priOf = (s) => ((s && s.pri) || 0) + ((s && s.se && s.se.indexOf(40) >= 0) ? 1 : 0); // 夜袭 SE40: 先制
+    const p1 = priOf(psk), p2 = priOf(esk);
     if (p1 !== p2) return p1 > p2;
     const s1 = E.effSpeed(b.player), s2 = E.effSpeed(b.enemy);
     if (s1 !== s2) return s1 > s2;

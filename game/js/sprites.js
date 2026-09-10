@@ -3,7 +3,9 @@
  * ============================================================ */
 (function (root) {
   "use strict";
-  const S = { cache: {}, failed: {} };
+  const S = { cache: {}, failed: {}, skin: null, skinIds: {} };
+  // 皮肤: S.skin='ghibli' 且 skinIds[id] 为真时, body/head 走皮肤路径。
+  // manifest 由 main.js 启动时加载 (assets/skins/<skin>/manifest.json: {ids:[...]})
 
   function placeholder(kind, key) {
     const c = document.createElement("canvas");
@@ -21,7 +23,11 @@
     return img;
   }
 
+  S.skinned = function (kind, key) {
+    return !!S.skin && (kind === "body" || kind === "head") && !!S.skinIds[key];
+  };
   S.url = function (kind, key) {
+    if (S.skinned(kind, key)) return "assets/skins/" + S.skin + "/" + kind + "/" + key + ".png";
     if (kind === "body") return "assets/pets/body/" + key + ".png";
     if (kind === "head") return "assets/pets/head/" + key + ".png";
     if (kind === "type") return "assets/types/" + key + ".png";
@@ -29,7 +35,7 @@
   };
   // 同步取(可能尚未加载完, 用 complete 判断)
   S.get = function (kind, key) {
-    const k = kind + ":" + key;
+    const k = (S.skinned(kind, key) ? "skin:" : "") + kind + ":" + key;
     if (S.cache[k]) return S.cache[k];
     if (S.failed[k]) return S.failed[k];
     const img = new Image();
@@ -50,7 +56,7 @@
       const total = list.length;
       if (!total) { resolve(); return; }
       list.forEach(([kind, key]) => {
-        const k = kind + ":" + key;
+        const k = (S.skinned(kind, key) ? "skin:" : "") + kind + ":" + key;
         if (S.cache[k] && S.cache[k].complete !== false) { step(); return; }
         const img = new Image();
         img.onload = () => { S.cache[k] = img; step(); };
