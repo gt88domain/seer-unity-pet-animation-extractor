@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 2,
+  "project": {
+    "id": "html5ai-pet-world",
+    "namespace": "html5ai",
+    "creatureTerm": "pet",
+    "contentPolicy": "original-first"
+  },
+  "runtime": {
+    "adapter": "legacy-numeric-id",
+    "petRuntimeIdRange": [900000, 909999],
+    "moveRuntimeIdRange": [910000, 919999]
+  },
+  "layers": [
+    {
+      "id": "legacy-reference",
+      "kind": "reference",
+      "publish": false,
+      "purpose": "Temporary compatibility baseline for the existing playable prototype. Do not ship as HTML5.ai original content."
+    },
+    {
+      "id": "html5ai-original",
+      "kind": "original",
+      "publish": true,
+      "namespace": "html5ai",
+      "files": {
+        "pets": "original/pets.json",
+        "moves": "original/moves.json",
+        "world": "original/world.json",
+        "bosses": "original/bosses.json",
+        "items": "original/items.json",
+        "progression": "original/progression.json"
+      }
+    }
+  ]
+}
