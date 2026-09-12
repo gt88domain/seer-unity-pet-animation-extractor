@@ -20,6 +20,17 @@ jobs:
           persist-credentials: false
       - name: Record tested revision
         run: git rev-parse HEAD
+      - name: Export review workspace
+        run: |
+          mkdir -p /tmp/game-review
+          git archive --format=tar.gz -o /tmp/game-review/review-source.tar.gz HEAD game tools AGENTS.md
+          git rev-parse HEAD > /tmp/game-review/TESTED_SHA.txt
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: game-review-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/game-review/
+          retention-days: 7
+          if-no-files-found: error
       - name: JavaScript syntax
         run: for f in game/js/*.js tools/*.mjs; do node --check "$f"; done
       - name: Data and compiler validation
@@ -29,16 +40,3 @@ jobs:
           python -m unittest discover -s tools -p 'test_build_data_v2.py' -v
       - name: Existing game smoke
         run: node tools/smoke.mjs
-      - name: Export review workspace
-        if: always()
-        run: |
-          mkdir -p /tmp/game-review
-          git archive --format=tar.gz -o /tmp/game-review/review-source.tar.gz HEAD game tools AGENTS.md
-          git rev-parse HEAD > /tmp/game-review/TESTED_SHA.txt
-      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
-        if: always()
-        with:
-          name: game-review-${{ github.event.pull_request.head.sha || github.sha }}
-          path: /tmp/game-review/
-          retention-days: 7
-          if-no-files-found: error
